@@ -27,7 +27,8 @@ def bk(xk, alpha, step):
 
 
 def ck(xk, alpha, step):
-    return 2 - q(xk, alpha) * step * step
+    res = 2 - q(xk, alpha) * step * step
+    return res
 
 
 def alpha(m):
@@ -35,18 +36,18 @@ def alpha(m):
 
 
 def rk_plus1(rk, xk, alpha, step):
-    return ak(xk, alpha, step) / (ck(xk, alpha, step) - bk(xk, alpha, step) * rk)
+    return (-1)*ak(xk, alpha, step)/(bk(xk, alpha, step) * rk + ck(xk, alpha, step))
 
 
 def sk_plus1(sk, rk, xk, alpha, step):
-    return (f(xk, alpha) * step * step + bk(xk, alpha, step) * sk) / (ck(xk, alpha, step) - bk(xk, alpha, step) * rk)
+    return (f(xk, alpha)*step*step - bk(xk, alpha, step)*sk) / (bk(xk, alpha, step)*rk + ck(xk, alpha, step))
 
 def r1(x1, alpha, step):
-    return (4 - ck(x1, alpha, step)) / (3*ak(x1, alpha, step)*step + 3*ak(x1, alpha, step) - bk(x1, alpha, step))
+    return ((-1)*(4*ak(x1, alpha, step) - ck(x1, alpha, step))) / (bk(x1, alpha, step) - ak(x1, alpha, step)*3*step - 3*ak(x1, alpha, step))
 
 
 def s1(x1, alpha, step):
-    return (f(x1, alpha) * step * step + ak(x1, alpha, step) * step * alpha) / (3*ak(x1, alpha, step)*step + 3*ak(x1, alpha, step) - bk(x1, alpha, step))
+    return ((-1)*f(x1, alpha)*step*step - ak(x1, alpha, step)*step*alpha) / (bk(x1, alpha, step) - ak(x1, alpha, step)*3*step - 3*ak(x1, alpha, step))
 
 
 def fillRcf(step, alpha):
@@ -84,8 +85,9 @@ def yNN(rn, rn_minus1, sn, sn_minus1, alpha, step):
     return (step * (2 * math.sqrt(1 + alpha) - rn_minus1 * sn - sn_minus1 - 4 * sn)) / (3 + step * rn * (rn_minus1 - 4))
 
 
-def yN(rn, rn_minus1, sn, sn_minus1, alpha, step):
-    return (2*step*math.sqrt(1+alpha) - sn_minus1 - rn_minus1*sn - 4*sn) / (3 + rn_minus1*rn - 4*rn)
+def yN(rn, sn, xn_minus1, alpha, step):
+    return ((-1)*f(xn_minus1, alpha)*step*step - bk(xn_minus1, alpha, step)*2*step*math.sqrt(1+alpha) - ((-1)*ck(xn_minus1, alpha, step) + 4*bk(xn_minus1, alpha, step))*rn) \
+           / (ak(xn_minus1, alpha, step) - 3*bk(xn_minus1, alpha, step) + ((-1)*ck(xn_minus1, alpha, step) + 4*bk(xn_minus1, alpha, step))*sn)
 
 
 def fillBySweepMethod(step, alpha):
@@ -96,7 +98,7 @@ def fillBySweepMethod(step, alpha):
     rn_minus1 = rCoefficients[-2]
     sn = sCoefficients[-1]
     sn_minus1 = sCoefficients[-2]
-    yn = yN(rn, rn_minus1, sn, sn_minus1, alpha, step)
+    yn = yN(rn, sn, b-step, alpha, step)
     result.append(yn)
     k = 0
     for i in range(len(rCoefficients) - 1, -1, -1):

@@ -121,7 +121,7 @@ if __name__ == "__main__":
             i = 0
             for y in yGridA:
                 print("x = {0}; y = {1}; погрешность = {2}".format(x, round(y, 5), round(vaultsA[i], 6)))
-                x = round(x + h, 1)
+                x = round(x + h, 2)
                 i += 1
             ############################################################################################################
             print("Неявный метод Эйлера")
@@ -167,6 +167,6 @@ if __name__ == "__main__":
             x = a
             i = 0
             for y in yGridC:
-                print("x = {0}; y = {1}; погрешность = {2}".format(x, round(y, 5), round(vaultsC[i], 6)))
-                x = round(x + h, 1)
+                print("x = {0}; y = {1}; погрешность = {2}".format(round(x, 2), round(y, 5), round(vaultsC[i], 6)))
+                x = round(x + h, 3)
                 i += 1

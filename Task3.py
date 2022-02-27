@@ -2,10 +2,10 @@ import math
 
 y0 = 1
 a = 0
-b = 1
+b = 0.999
 epsilon = 1e-4
 
-h = 0.1
+h = 0.001
 
 N = int((b - a) / h)
 
@@ -88,15 +88,20 @@ if __name__ == "__main__":
         vaults.append(math.fabs(yk - ykHalfStep) / 3)
     x = a
     i = 0
-    for y in yGrid:
-        print("x = {0}; y = {1}; погрешность = {2}".format(x, round(y, 5), vaults[i]))
-        x = round(x + h, 1)
-        i += 1
+    yGridForPrint = yGrid[::100]
+    xGridForPrint = xGrid[::100]
+    vaultsForPrint = vaults[::100]
+    for i in range(len(yGridForPrint)):
+        print("x = {0}; y = {1}; погрешность = {2}".format(round(xGridForPrint[i], 2), round(yGridForPrint[i], 5), vaultsForPrint[i]))
+    # for y in yGrid:
+    #     print("x = {0}; y = {1}; погрешность = {2}".format(x, round(y, 5), vaults[i]))
+    #     x = round(x + h, 3)
+    #     i += 1
 
     print("НЕЯВНАЯ СХЕМА АДАМСА")
-    xGrid = xGrid[:2]
-    yGrid = yGrid[:2]
-    vaults = vaults[:2]
+    xGrid = xGrid[:2] #берем первые 2 эл-та из явной схемы
+    yGrid = yGrid[:2] #берем первые 2 эл-та из явной схемы
+    vaults = vaults[:2] #берем первые 2 эл-та из явной схемы
     for k in range(2, N+1):
         yk_ = explicitFormula(xGrid[k - 1], yGrid[k - 1], xGrid[k - 2], yGrid[k - 2], h)
         xk = a + h * k
@@ -109,9 +114,15 @@ if __name__ == "__main__":
         xGrid.append(xk)
         ykHalfStep = getYkByImplicitFormula(xk, h / 2)
         vaults.append(math.fabs(yk_2 - ykHalfStep) / 7)
-    x = a
-    i = 0
-    for y in yGrid:
-        print("x = {0}; y = {1}; погрешность = {2}".format(x, round(y, 5), vaults[i]))
-        x = round(x + h, 1)
-        i += 1
+    yGridForPrint = yGrid[::100]
+    xGridForPrint = xGrid[::100]
+    vaultsForPrint = vaults[::100]
+    for i in range(len(yGridForPrint)):
+        print("x = {0}; y = {1}; погрешность = {2}".format(round(xGridForPrint[i], 2), round(yGridForPrint[i], 5),
+                                                           vaultsForPrint[i]))
+    # x = a
+    # i = 0
+    # for y in yGrid:
+    #     print("x = {0}; y = {1}; погрешность = {2}".format(x, round(y, 5), vaults[i]))
+    #     x = round(x + h, 3)
+    #     i += 1

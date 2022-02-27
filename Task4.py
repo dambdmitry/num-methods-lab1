@@ -9,26 +9,20 @@ N = int((b - a) / h)
 def p(x, alpha):
     return 0.5 / (x + alpha)
 
-
 def q(x, alpha):
     return 0
-
 
 def f(x, alpha):
     return -1 / (math.sqrt(x + alpha))
 
-
 def ak(xk, alpha, step):
     return 1 + (p(xk, alpha) * step) / 2
-
 
 def bk(xk, alpha, step):
     return 1 - (p(xk, alpha) * step) / 2
 
-
 def ck(xk, alpha, step):
     return 2 - q(xk, alpha) * step * step
-
 
 def alpha(m):
     return 1 + 0.4 * m
@@ -37,21 +31,18 @@ def alpha(m):
 def rk_plus1(rk, xk, alpha, step):
     return ak(xk, alpha, step) / (ck(xk, alpha, step) - bk(xk, alpha, step) * rk)
 
-
 def sk_plus1(sk, rk, xk, alpha, step):
     return (f(xk, alpha) * step * step + bk(xk, alpha, step) * sk) / (ck(xk, alpha, step) - bk(xk, alpha, step) * rk)
 
 def r1(x1, alpha, step):
-    return (4 - ck(x1, alpha, step)) / (3*ak(x1, alpha, step)*step + 3*ak(x1, alpha, step) - bk(x1, alpha, step))
-
+    return (4*alpha*ak(x1, alpha, step) - ck(x1, alpha, step)*alpha) / (3*ak(x1, alpha, step)*step + 3*alpha*ak(x1, alpha, step) - bk(x1, alpha, step)*alpha)
 
 def s1(x1, alpha, step):
-    return (f(x1, alpha) * step * step + ak(x1, alpha, step) * step * alpha) / (3*ak(x1, alpha, step)*step + 3*ak(x1, alpha, step) - bk(x1, alpha, step))
+    return (alpha*ak(x1, alpha, step)*step + f(x1, alpha)*step*step*alpha) / (3*ak(x1, alpha, step)*step + 3*alpha*ak(x1, alpha, step) - bk(x1, alpha, step)*alpha)
 
 
 def fillRcf(step, alpha):
     result = []
-    #result.append(0)  # для равенства размера сеток
     x1 = a + step
     rFirst = r1(x1, alpha, step)
     result.append(rFirst)
@@ -63,10 +54,8 @@ def fillRcf(step, alpha):
         result.append(rk_Plus1)
     return result
 
-
 def fillCcf(step, alpha, rCfs):
     result = []
-    #result.append(0)  # для равенства размера сеток
     x1 = a + step
     sFirst = s1(x1, alpha, step)
     result.append(sFirst)
@@ -85,7 +74,7 @@ def yNN(rn, rn_minus1, sn, sn_minus1, alpha, step):
 
 
 def yN(rn, rn_minus1, sn, sn_minus1, alpha, step):
-    return (2*step*math.sqrt(1+alpha) - sn_minus1 - rn_minus1*sn - 4*sn) / (3 + rn_minus1*rn - 4*rn)
+    return (2*step*math.sqrt(1+alpha) - rn_minus1*sn - sn_minus1 + 4*sn) / (3 + rn_minus1*rn - 4*rn)
 
 
 def fillBySweepMethod(step, alpha):

@@ -48,11 +48,12 @@ def fillRcf(step, alpha):
     result.append(rFirst)
     n = int((b - a) / step)
     for k in range(1, n):
-        xk = a + h*k
+        xk = a + step*k
         rk = result[k-1]
         rk_Plus1 = rk_plus1(rk, xk, alpha, step)
         result.append(rk_Plus1)
     return result
+
 
 def fillCcf(step, alpha, rCfs):
     result = []
@@ -61,7 +62,7 @@ def fillCcf(step, alpha, rCfs):
     result.append(sFirst)
     n = int((b - a) / step)
     for k in range(1, n):
-        xk = a + h * k
+        xk = a + step * k
         sk = result[k-1]
         rk = rCfs[k-1]
         sk_Plus1 = sk_plus1(sk, rk, xk, alpha, step)
@@ -105,18 +106,18 @@ def calculateVaults(yGrid, yGridHalfStep):
 def yy(x, alpha):
     return 2/3*(x + alpha)**1.5 + alpha/3
 if __name__ == "__main__":
-    for m in range(1, 11):
-        ALPHA = alpha(m)
-        print("m = {0}; alpha = {1}".format(m, ALPHA))
-        yGrid = fillBySweepMethod(h, ALPHA)
-        yGridHalfStep = fillBySweepMethod(h / 2, ALPHA)
-        yGridHalfStep = yGridHalfStep[::2]
-        vaults = calculateVaults(yGrid, yGridHalfStep)
+    #for m in range(1, 11):
+    ALPHA = 1.4
+    print("m = {0}; alpha = {1}".format(1, ALPHA))
+    yGrid = fillBySweepMethod(h, ALPHA)
+    yGridHalfStep = fillBySweepMethod(h / 2, ALPHA)
+    yGridHalfStep = yGridHalfStep[::2]
+    vaults = calculateVaults(yGrid, yGridHalfStep)
 
-        x = a
-        i = 0
-        for y in yGrid:
-            yyy = yy(x, ALPHA)
-            print("x = {0}; y = {1}; точное решение = {2} погрешность = {3}".format(round(x, 4), round(y, 5),round(yyy, 5), round(vaults[i], 6)))
-            x += h
-            i += 1
+    x = a
+    i = 0
+    for y in yGrid:
+        yyy = yy(x, ALPHA)
+        print("x = {0}; y = {1}; точное решение = {2} погрешность = {3}".format(round(x, 4), round(y, 5),round(yyy, 5), vaults[i]))
+        x += h
+        i += 1
